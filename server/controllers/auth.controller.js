@@ -3,6 +3,7 @@ import User from './../models/user.model'
 import { expressjwt } from 'express-jwt';
 import config from './../../config/config';
 
+
 const signin = async (req, res) => {
 
     try {
@@ -24,9 +25,9 @@ const signin = async (req, res) => {
         }
 
         const token = jwt.sign({ _id: user._id}, config.jwtSecret);
-        console.log(token)
-        res.cookie('t', token, { expires: new Date() + 9999 })
 
+        res.cookie('t', token, { expires: new Date(Date.now() + 9999) })
+        
         return res.json({
             token,
             user: {
@@ -37,8 +38,10 @@ const signin = async (req, res) => {
         })
 
     } catch (err) {
+        console.error(`User: ${req.body.email}.\n Error: ${err}`)
+
         return res.status(401).json({
-            error: "Could not sign in"
+            error: `Could not sign in`
         })
     }
 }
